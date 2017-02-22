@@ -15,7 +15,9 @@
 
     <style is="custom-style" include="demo-pages-shared-styles">
       small {
+        display: block;
         word-wrap: break-word;
+        margin: 16px;
       }
 
       .centered {
@@ -70,7 +72,12 @@
             motivational-message="Zet m op! Test!"
           ></caas-campaign-testimonials>
           
+          
           <button on-tap="addTestimonial">Add testimonial</button>
+          <small>Don't worry if your new testimonial isn't added to the list of testimonials.
+          This is probably due to the backend requiring a response from an external party. 
+          You can listen to campaign-testimonial-addition-successful and campaign-testimonial-addition-successful-failure for feedback.</small>
+        
           
           <template is="dom-repeat" items="[[testimonials]]">
             <p>[[item.message]]</p>

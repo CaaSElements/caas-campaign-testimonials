@@ -176,16 +176,16 @@ Example:
       * Handle response of POST request. This will be run when request was succesful. 
       * A new GET request is made to the database to collect the updated testimonials Array.
       */  
-      _handlePostResponse: function (e) {
+      _handlePostResponse: function () {
         this.fire('campaign-testimonial-created')
         this.getCampaignTestimonials()
       },
       /**
       * Handle error of POST request. 
       */      
-      _handlePostError: function (e) {
+      _handlePostError: function (event) {
         this.fire('campaign-testimonial-creation-error', {
-          message: evt.detail.error.message,
+          message: event.detail.error.message,
           response: event.detail.request.xhr.response
         })
       },

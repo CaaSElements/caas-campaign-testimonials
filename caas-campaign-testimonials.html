@@ -9,7 +9,7 @@ Example:
           <caas-campaign-testimonials>
             id="caas-testimonials"
             campaign-id="749"
-            user-id="[[userId]]"
+            investor-id="[[userId]]"
             invoice-number="555"
             relation-to-entrepeneur="familie"
             anonymous= "false"
@@ -41,8 +41,8 @@ Example:
     ></iron-ajax>
 
     <iron-ajax
-      id="postUserTestimonial"
-      url="[[apiEndpoint]]/investors/[[userId]]/testimonials"
+      id="postInvestorTestimonial"
+      url="[[apiEndpoint]]/investors/[[investorId]]/testimonials"
       headers="[[_requestHeaders]]"
       body="[[_contractRequestData]]"
       handle-as="json"
@@ -77,7 +77,7 @@ Example:
         /**
         * Id String of logged in User
         */
-        userId: {
+        investorId: {
           type: String
         },
         /**
@@ -94,7 +94,7 @@ Example:
           type: String
         },
         /**
-        * Number of invoice of investor (userId) in campaign (campaignId)
+        * Number of invoice of investor (investorId) in campaign (campaignId)
         */
         invoiceNumber: {
           type: String
@@ -106,7 +106,7 @@ Example:
           type: String
         },
         /**
-        * Whether user wants to stay anonymous or not
+        * Whether investor wants to stay anonymous or not
         */
         anonymous: {
           type: Boolean
@@ -136,10 +136,10 @@ Example:
 
       },
       /**
-      * Sends a POST request to the iron-ajax element postUserTestimonial url with _requestHeaders as headers and _contractRequestData as body
+      * Sends a POST request to the iron-ajax element postInvestorTestimonial url with _requestHeaders as headers and _contractRequestData as body
       */  
-      addUserTestimonial: function () {
-        this.$.postUserTestimonial.generateRequest()
+      addInvestorTestimonial: function () {
+        this.$.postInvestorTestimonial.generateRequest()
       },
       /**
       * Sends a GET request to the iron-ajax element getTestimonials url

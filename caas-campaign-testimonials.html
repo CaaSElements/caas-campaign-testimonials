@@ -129,12 +129,17 @@ Example:
 
       },
       /**
-      * 
+      * Sends a POST request to the iron-ajax element postUserTestimonial url with _requestHeaders as headers and _contractRequestData as body
       */  
       addUserTestimonial: function () {
         this.$.postUserTestimonial.generateRequest()
       },
-    
+      /**
+      * Sends a GET request to the iron-ajax element getTestimonials url
+      */  
+      getCampaignTestimonials: function () {
+        this.$.getTestimonials.generateRequest()
+      },
       /**
       * Return object to be used as POST request Header
       */  
@@ -162,7 +167,7 @@ Example:
       */  
       _handlePostResponse: function (e) {
         this.fire('campaign-testimonial-addition-successful')
-        this.$.getTestimonials.generateRequest()
+        this.getCampaignTestimonials()
       },
       /**
       * Handle error of POST request. 

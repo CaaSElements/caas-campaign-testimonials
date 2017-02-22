@@ -47,7 +47,6 @@ Example:
       body="[[_contractRequestData]]"
       handle-as="json"
       method="POST"
-      last-response="{{_handleTestimonials}}"
       on-response="_handlePostResponse"
       on-error="_handlePostError"      
       debounce-duration="3000"
@@ -178,14 +177,14 @@ Example:
       * A new GET request is made to the database to collect the updated testimonials Array.
       */  
       _handlePostResponse: function (e) {
-        this.fire('campaign-testimonial-addition-successful')
+        this.fire('campaign-testimonial-created')
         this.getCampaignTestimonials()
       },
       /**
       * Handle error of POST request. 
       */      
       _handlePostError: function (e) {
-        this.fire('campaign-testimonial-addition-successful-failure', {
+        this.fire('campaign-testimonial-creation-error', {
           message: evt.detail.error.message,
           response: event.detail.request.xhr.response
         })

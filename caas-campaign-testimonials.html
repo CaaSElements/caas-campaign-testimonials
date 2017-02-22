@@ -31,7 +31,7 @@ Example:
     </style>
 
     <iron-ajax
-      auto
+      auto="[[autoLoad]]"
       id="getTestimonials"
       url="[[apiEndpoint]]/campaigns/[[campaignId]]/investments"
       handle-as="json"
@@ -61,6 +61,13 @@ Example:
       is: 'caas-campaign-testimonials',
 
       properties: {
+        /**
+        *  Whether testimonials Array should be obtained when iron-ajax element getTestimonials is attached
+        */
+        autoLoad: {
+          type: Boolean,
+          value: false
+        },
         /**
         *  Id String of campaign
         */
@@ -160,7 +167,6 @@ Example:
           "relationToEntrepeneur": relationToEntrepeneur
         })
       },
-
       /**
       * Handle response of POST request. This will be run when request was succesful. 
       * A new GET request is made to the database to collect the updated testimonials Array.

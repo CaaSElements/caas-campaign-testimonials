@@ -1,0 +1,178 @@
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../iron-ajax/iron-ajax.html">
+
+<!--
+`caas-campaign-testimonials`
+Polymer Campaign Testimonials Element for Crowdfunding as a Service Solutions
+
+Example: 
+          <caas-campaign-testimonials>
+            id="caas-testimonials"
+            campaign-id="749"
+            user-id="[[userId]]"
+            invoice-number="555"
+            relation-to-entrepeneur="familie"
+            anonymous= "false"
+            api-endpoint="http://canapi.local"
+            testimonials="{{testimonials}}"
+            access-token="[[accessToken]]"
+            motivational-message="Zet m op! Test!"
+          </caas-campaign-testimonials>
+
+@demo demo/index.html 
+-->
+
+<dom-module id="caas-campaign-testimonials">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+    </style>
+
+    <iron-ajax
+      auto
+      id="getTestimonials"
+      url="[[apiEndpoint]]/campaigns/[[campaignId]]/investments"
+      handle-as="json"
+      method="GET"
+      last-response="{{testimonials}}"
+      debounce-duration="3000"
+    ></iron-ajax>
+
+    <iron-ajax
+      id="postUserTestimonial"
+      url="[[apiEndpoint]]/investors/[[userId]]/testimonials"
+      headers="[[_requestHeaders]]"
+      body="[[_contractRequestData]]"
+      handle-as="json"
+      method="POST"
+      last-response="{{_handleTestimonials}}"
+      on-response="_handlePostResponse"
+      on-error="_handlePostError"      
+      debounce-duration="3000"
+    ></iron-ajax>    
+
+  </template>
+
+  <script>
+    Polymer({
+
+      is: 'caas-campaign-testimonials',
+
+      properties: {
+        /**
+        *  Id String of campaign
+        */
+        campaignId: {
+          type: String
+        },
+        /**
+        * Id String of logged in User
+        */
+        userId: {
+          type: String
+        },
+        /**
+        * Array filled with testimonial Objects of investors (firstName, id, investment (amount invested), lastName & message)
+        */        
+        testimonials: {
+          type: Array,
+          notify: true,
+        },
+        /**
+        * The access token (JSON web token) associated with the current user session
+        */      
+        accessToken: {
+          type: String
+        },
+        /**
+        * Number of invoice of investor (userId) in campaign (campaignId)
+        */
+        invoiceNumber: {
+          type: String
+        },
+        /**
+        * String of message to be send to the database
+        */
+        motivationalMessage: {
+          type: String
+        },
+        /**
+        * Whether user wants to stay anonymous or not
+        */
+        anonymous: {
+          type: Boolean
+        },                
+        /**
+        * Relationship type the investor has with the entepreneur
+        */        
+        relationToEntrepeneur: {
+          type: String
+        },
+        /**
+        * Payload of body to be be sent with POST request
+        */          
+        _contractRequestData: {
+          type: String,
+          notify: true,
+          computed: '_computeContractRequestData(campaignId, invoiceNumber, motivationalMessage, anonymous, relationToEntrepeneur)'
+        },
+        /**
+        * Payload of header to be be sent with POST request
+        */  
+        _requestHeaders: {
+          type: Object,
+          notify: true,          
+          computed: '_computeRequestHeaders(accessToken)'
+        },
+
+      },
+      /**
+      * 
+      */  
+      addUserTestimonial: function () {
+        this.$.postUserTestimonial.generateRequest()
+      },
+    
+      /**
+      * Return object to be used as POST request Header
+      */  
+      _computeRequestHeaders: function(accessToken) {
+        return {
+          'authorization': 'Bearer ' + accessToken 
+        }
+      },
+      /**
+      * Return Object to be used as POST request body
+      */  
+      _computeContractRequestData: function(campaignId, invoiceNumber, motivationalMessage, anonymous, relationToEntrepeneur) {
+        return JSON.stringify({
+          "campaignId": campaignId,
+          "invoiceNumber": invoiceNumber, 
+          "motivationalMessage": motivationalMessage, 
+          "anonymous": anonymous, 
+          "relationToEntrepeneur": relationToEntrepeneur
+        })
+      },
+
+      /**
+      * Handle response of POST request. This will be run when request was succesful. 
+      * A new GET request is made to the database to collect the updated testimonials Array.
+      */  
+      _handlePostResponse: function (e) {
+        this.fire('campaign-testimonial-addition-successful')
+        this.$.getTestimonials.generateRequest()
+      },
+      /**
+      * Handle error of POST request. 
+      */      
+      _handlePostError: function (e) {
+        this.fire('campaign-testimonial-addition-successful-failure', {
+          message: evt.detail.error.message,
+          response: event.detail.request.xhr.response
+        });)
+      },
+    });
+  </script>
+</dom-module>

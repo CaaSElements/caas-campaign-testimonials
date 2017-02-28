@@ -90,7 +90,11 @@ Example:
 
       },
       /**
-      * Sends a POST request to the iron-ajax element postInvestorTestimonial url with _requestHeaders as headers
+      * Sends a POST request to the iron-ajax element postInvestorTestimonial url
+      * @param {String} invoiceNumber The invoice id associated with the investment
+      * @param {String} relationToEntrepreneur The relation to the entrepreneur
+      * @param {Boolean} anonymous If true, the testimonial won't be published publicly
+      * @param {String} motivationalMessage The message
       */  
       addItem: function (invoiceNumber, relationToEntrepreneur, anonymous, motivationalMessage) {
         this.$.postInvestorTestimonial.body = JSON.stringify({

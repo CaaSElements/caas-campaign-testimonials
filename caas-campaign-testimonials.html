@@ -1,5 +1,6 @@
 <link rel="import" href="../polymer/polymer.html">
 <link rel="import" href="../iron-ajax/iron-ajax.html">
+<link rel="import" href="../caas-auth-behavior/caas-auth-behavior.html">
 
 <!--
 `caas-campaign-testimonials`
@@ -43,8 +44,8 @@ Example:
     <iron-ajax
       id="postInvestorTestimonial"
       url="[[apiEndpoint]]/investors/[[investorId]]/testimonials"
-      headers="[[_requestHeaders]]"
       body="[[_contractRequestData]]"
+      headers="[[_authHeader]]"
       handle-as="json"
       method="POST"
       on-response="_handlePostResponse"
@@ -58,6 +59,7 @@ Example:
     Polymer({
 
       is: 'caas-campaign-testimonials',
+      behaviors: [CaasAuthBehavior],
 
       properties: {
         /**
@@ -93,12 +95,6 @@ Example:
           type: String
         },
         /**
-        * The access token (JSON web token) associated with the current user session
-        */      
-        accessToken: {
-          type: String
-        },
-        /**
         * Number of invoice of investor (investorId) in campaign (campaignId)
         */
         invoiceNumber: {
@@ -131,14 +127,6 @@ Example:
           notify: true,
           computed: '_computeContractRequestData(campaignId, invoiceNumber, motivationalMessage, anonymous, relationToEntrepeneur)'
         },
-        /**
-        * Payload of header to be be sent with POST request
-        */  
-        _requestHeaders: {
-          type: Object,
-          notify: true,          
-          computed: '_computeRequestHeaders(accessToken)'
-        },
 
       },
       /**
@@ -152,14 +140,6 @@ Example:
       */  
       getCampaignTestimonials: function () {
         this.$.getTestimonials.generateRequest()
-      },
-      /**
-      * Return object to be used as POST request Header
-      */  
-      _computeRequestHeaders: function(accessToken) {
-        return {
-          'authorization': 'Bearer ' + accessToken 
-        }
       },
       /**
       * Return Object to be used as POST request body

@@ -13,7 +13,8 @@
   "dependencies": {
     "polymer": "Polymer/polymer#^1.6.0",
     "iron-ajax": "PolymerElements/iron-ajax#^1.4.3",
-    "caas-campaign": "CaaSElements/caas-campaign"
+    "caas-campaign": "CaaSElements/caas-campaign",
+    "caas-auth-behavior": "CaaSElements/caas-auth-behavior"
   },
   "devDependencies": {
     "iron-component-page": "PolymerElements/iron-component-page#^1.0.0",

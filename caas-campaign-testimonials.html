@@ -9,15 +9,11 @@ Polymer Campaign Testimonials Element for Crowdfunding as a Service Solutions
 Example: 
           <caas-campaign-testimonials>
             id="caas-testimonials"
-            campaign-id="749"
-            investor-id="[[userId]]"
-            invoice-number="555"
-            relation-to-entrepeneur="familie"
-            anonymous= "false"
             api-endpoint="http://canapi.local"
-            testimonials="{{testimonials}}"
             access-token="[[accessToken]]"
-            motivational-message="Zet m op! Test!"
+            campaign-id="[[campaignId]]"
+            investor-id="[[userId]]"
+            testimonials="{{testimonials}}"
           </caas-campaign-testimonials>
 
 @demo demo/index.html 
@@ -38,19 +34,16 @@ Example:
       handle-as="json"
       method="GET"
       last-response="{{testimonials}}"
-      debounce-duration="3000"
     ></iron-ajax>
 
     <iron-ajax
       id="postInvestorTestimonial"
       url="[[apiEndpoint]]/investors/[[investorId]]/testimonials"
-      body="[[_contractRequestData]]"
       headers="[[_authHeader]]"
       handle-as="json"
       method="POST"
       on-response="_handlePostResponse"
       on-error="_handlePostError"      
-      debounce-duration="3000"
     ></iron-ajax>    
 
   </template>
@@ -94,51 +87,25 @@ Example:
         apiEndpoint: {
           type: String
         },
-        /**
-        * Number of invoice of investor (investorId) in campaign (campaignId)
-        */
-        invoiceNumber: {
-          type: String
-        },
-        /**
-        * String of message to be send to the database
-        */
-        motivationalMessage: {
-          type: String
-        },
-        /**
-        * Whether investor wants to stay anonymous or not
-        */
-        anonymous: {
-          type: Boolean,
-          value: true
-        },                
-        /**
-        * Relationship type the investor has with the entepreneur
-        */        
-        relationToEntrepeneur: {
-          type: String
-        },
-        /**
-        * Payload of body to be be sent with POST request
-        */          
-        _contractRequestData: {
-          type: String,
-          notify: true,
-          computed: '_computeContractRequestData(campaignId, invoiceNumber, motivationalMessage, anonymous, relationToEntrepeneur)'
-        },
 
       },
       /**
-      * Sends a POST request to the iron-ajax element postInvestorTestimonial url with _requestHeaders as headers and _contractRequestData as body
+      * Sends a POST request to the iron-ajax element postInvestorTestimonial url with _requestHeaders as headers
       */  
-      addInvestorTestimonial: function () {
+      addItem: function (invoiceNumber, relationToEntrepreneur, anonymous, motivationalMessage) {
+        this.$.postInvestorTestimonial.body = JSON.stringify({
+          "campaignId": this.campaignId,
+          "invoiceNumber": invoiceNumber, 
+          "motivationalMessage": motivationalMessage, 
+          "anonymous": anonymous, 
+          "relationToEntrepeneur": relationToEntrepreneur
+        })
         this.$.postInvestorTestimonial.generateRequest()
       },
       /**
       * Sends a GET request to the iron-ajax element getTestimonials url
       */  
-      getCampaignTestimonials: function () {
+      getItems: function () {
         this.$.getTestimonials.generateRequest()
       },
       /**
@@ -159,7 +126,8 @@ Example:
       */  
       _handlePostResponse: function () {
         this.fire('campaign-testimonial-created')
-        this.getCampaignTestimonials()
+        this.$.postInvestorTestimonial.body = null;
+        this.getItems()
       },
       /**
       * Handle error of POST request. 

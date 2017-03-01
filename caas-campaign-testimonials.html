@@ -72,7 +72,8 @@ Example:
         * Id String of logged in User
         */
         investorId: {
-          type: String
+          type: String,
+          notify: true
         },
         /**
         * Array filled with testimonial Objects of investors (firstName, id, investment (amount invested), lastName & message)
@@ -89,6 +90,11 @@ Example:
         },
 
       },
+
+      observers: [
+        '_setInvestorId(_tokenData.data.*)'
+      ],
+
       /**
       * Sends a POST request to the iron-ajax element postInvestorTestimonial url
       * @param {String} invoiceNumber The invoice id associated with the investment
@@ -142,6 +148,11 @@ Example:
           response: event.detail.request.xhr.response
         })
       },
+
+      _setInvestorId(tokenDataChange) {
+        this.investorId = this._tokenData.data.userId;
+      }
+
     });
   </script>
 </dom-module>
